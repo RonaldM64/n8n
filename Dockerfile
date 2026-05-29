@@ -3,7 +3,7 @@ FROM node:22-alpine AS builder
 
 WORKDIR /data
 
-# Instalamos herramientas del sistema requeridas
+# CORREGIDO: git completamente en minúsculas
 RUN apk add --no-cache python3 make g++ git
 
 # Instalamos pnpm y turbo globalmente para evitar fallos de ruta
