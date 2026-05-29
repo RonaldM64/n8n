@@ -1,5 +1,5 @@
-# Pasos de compilación pesados en una imagen temporal
-FROM node:18-alpine AS builder
+# 1. Cambiamos la imagen base de compilación a Node 22 (Alpine)
+FROM node:22-alpine AS builder
 
 WORKDIR /data
 
@@ -19,7 +19,7 @@ RUN npm install -g pnpm && pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
 
-# --- IMAGEN FINAL DE PRODUCCIÓN (Ultra ligera y limpia) ---
+# --- IMAGEN FINAL DE PRODUCCIÓN ---
 FROM n8nio/n8n:latest
 
 # Reemplazamos los archivos de ejecución internos con los cambios de tu fork
