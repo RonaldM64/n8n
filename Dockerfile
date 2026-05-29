@@ -12,12 +12,13 @@ RUN npm install -g pnpm
 # Copiamos todo el proyecto
 COPY . .
 
-# EVITAR LEFTHOOK: Desactivamos los scripts de preparación de Git durante la instalación
-RUN pnpm config set side-effects-cache false && \
-    pnpm install --frozen-lockfile --ignore-scripts
+# Instalamos dependencias ignorando los scripts problemáticos de Git
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Compilamos el proyecto completo usando Turborepo de forma directa
-RUN pnpm build
+# COMPILACIÓN FILTRADA: Compilamos solo lo esencial en orden, saltándonos Turborepo global
+RUN pnpm --filter n8n-core build && \
+    pnpm --filter n8n-nodes-base build && \
+    pnpm --filter n8n build
 
 # --- IMAGEN FINAL DE PRODUCCIÓN ---
 FROM n8nio/n8n:latest
