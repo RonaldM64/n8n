@@ -1,6 +1,8 @@
 # 1. Imagen base de compilación con Node 22 (Alpine)
 FROM node:22-alpine AS builder
 
+ENV CI=true
+
 WORKDIR /data
 
 # CORREGIDO: git completamente en minúsculas
