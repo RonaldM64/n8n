@@ -3,19 +3,19 @@ FROM node:22-alpine AS builder
 
 WORKDIR /data
 
-# Instalamos las herramientas nativas necesarias para compilar el monorepo
+# Instalamos herramientas nativas del sistema necesarias para compilar módulos de C++
 RUN apk add --no-cache python3 make g++ git
-
-# Copiamos la TOTALIDAD del proyecto para que no falte ningún script (como scripts/ o patches/)
-COPY . .
 
 # Instalamos pnpm globalmente
 RUN npm install -g pnpm
 
-# Instalamos las dependencias ignorando temporalmente los scripts de ciclo de vida
-RUN pnpm install --frozen-lockfile --ignore-scripts
+# Copiamos la totalidad del proyecto (incluyendo turbo.json, package.json, scripts y parches)
+COPY . .
 
-# Compilamos el proyecto completo (esto generará los binarios y ejecutables internos que faltaban)
+# Instalamos las dependencias permitiendo que se ejecuten los scripts de enlace internos
+RUN pnpm install --frozen-lockfile
+
+# Compilamos el proyecto completo usando el pipeline de Turborepo
 RUN pnpm build
 
 # --- IMAGEN FINAL DE PRODUCCIÓN ---
