@@ -4,7 +4,7 @@ FROM node:18-alpine AS builder
 WORKDIR /data
 
 # Instalamos las herramientas necesarias para compilar el monorepo
-RUN apk add --no-cache python3 make g++ Git
+RUN apk add --no-cache python3 make g++ git
 
 # Copiamos los archivos de configuración de dependencias
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
