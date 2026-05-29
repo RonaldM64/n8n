@@ -39,3 +39,16 @@
 !packages/@n8n/typescript-config
 !packages/@n8n/typescript-config/**
 
+# Permitir configuraciones del monorepo y Turborepo
+!turbo.json
+!.npmrc
+!pnpm-workspace.yaml
+!pnpm-lock.yaml
+!packages
+
+# Ignorar carpetas pesadas de desarrollo local
+**/node_modules
+**/dist
+**/.turbo
+
+
