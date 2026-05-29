@@ -3,27 +3,25 @@ FROM node:22-alpine AS builder
 
 WORKDIR /data
 
-# Herramientas nativas necesarias
+# Instalamos herramientas del sistema requeridas
 RUN apk add --no-cache python3 make g++ git
 
-# Instalamos pnpm globalmente
-RUN npm install -g pnpm
+# Instalamos pnpm y turbo globalmente para evitar fallos de ruta
+RUN npm install -g pnpm turborepo
 
-# Copiamos todo el proyecto
+# Copiamos absolutamente todo el monorepo
 COPY . .
 
-# Instalamos dependencias ignorando los scripts problemáticos de Git
-RUN pnpm install --frozen-lockfile --ignore-scripts
+# Instalamos todas las dependencias permitiendo enlaces internos de pnpm
+RUN pnpm install --frozen-lockfile
 
-# COMPILACIÓN FILTRADA: Compilamos solo lo esencial en orden, saltándonos Turborepo global
-RUN pnpm --filter n8n-core build && \
-    pnpm --filter n8n-nodes-base build && \
-    pnpm --filter n8n build
+# Compilamos el proyecto completo usando la arquitectura del monorepo original
+RUN pnpm build
 
 # --- IMAGEN FINAL DE PRODUCCIÓN ---
 FROM n8nio/n8n:latest
 
-# Reemplazamos los archivos de ejecución con los de tu fork
+# Inyectamos los paquetes con los cambios de tu fork en la imagen oficial
 COPY --from=builder /data/packages /usr/local/lib/node_modules/n8n/packages
 
 EXPOSE 5678
