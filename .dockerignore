@@ -45,6 +45,7 @@
 !pnpm-workspace.yaml
 !pnpm-lock.yaml
 !packages
+!tsconfig.json
 
 # Ignorar carpetas pesadas de desarrollo local
 **/node_modules
